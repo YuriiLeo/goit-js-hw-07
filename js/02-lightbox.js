@@ -6,7 +6,9 @@
 
 import { galleryItems } from './gallery-items.js';
 
-console.log(galleryItems);
+const galleryImgContainer = document.querySelector(".gallery");
+const ImgMarkup = createImgMarkup(galleryItems);
+galleryImgContainer.insertAdjacentHTML('beforeend', ImgMarkup);
 
 function createImgMarkup (array) {
     return array
@@ -22,9 +24,9 @@ function createImgMarkup (array) {
         .join("");
 }
 
-const result = createImgMarkup(galleryItems);
-console.log(result);
-
-const galleryImg = document.querySelector(".gallery");
-galleryImg.insertAdjacentHTML('beforeend', result);
-
+const lightbox = new SimpleLightbox(".gallery__item", {
+    captionsData: "alt",
+    captionPosition: "bottom",
+    captionDelay: 250,
+});
+    

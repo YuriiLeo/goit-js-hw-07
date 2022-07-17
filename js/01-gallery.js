@@ -2,12 +2,15 @@
 // 2. Підставити в розмітку поля (${})
 // 3. Навісити клік на галерею  (делегування)
 // 4. Визначення ел по якому був клік (event.target)
-// 5. Підставити данні у модалку з дата сорс (dataSet)
-// 6. 
+// 5. Підключити модалку
+// 6. Підставити данні у модалку з дата сорс(dataSet)
+ 
 import { galleryItems } from './gallery-items.js';
 
 // 1 створення розмітки
-console.log(galleryItems);
+const galleryImgContainer = document.querySelector(".gallery");
+const ImgMarkup = createImgMarkup(galleryItems);
+galleryImgContainer.insertAdjacentHTML('beforeend', ImgMarkup);
 
 function createImgMarkup (array) {
     return array.reduce(
@@ -26,48 +29,28 @@ function createImgMarkup (array) {
     );
 }
 
-const ImgMarkup = createImgMarkup(galleryItems);
-// console.log(ImgMarkup);
-
-const galleryImgContainer = document.querySelector(".gallery");
-galleryImgContainer.insertAdjacentHTML('beforeend', ImgMarkup);
-
-// 2 делегування
+// 2 делегування, підключення 
 galleryImgContainer.addEventListener('click', onGalleryImgContainerClick);
 
 function onGalleryImgContainerClick(evt) {
+    evt.preventDefault();
     const isGalleryImageEl = evt.target.classList.contains("gallery__image")
     if (!isGalleryImageEl) {
         return;
     }
-    evt.preventDefault();
     console.log(evt.target.dataset.source);   
 
     const imgEl = evt.target;
-    const parentGalleryImage = imgEl.closest('.gallery__item')
+    const instance = basicLightbox.create(`<img src=${imgEl.dataset.source}>`);
+  instance.show();
+  
+  window.addEventListener("keydown", onPressEscKey);
 
-    removeOpenModalClass();
-    addOpenModalClass(parentGalleryImage)
-
-    console.log(parentGalleryImage);
-
-    // модалка = imgEl.dataset.source;   
-    
-    // console.log(curentOpenImage);
-    // console.log(imgEl.classList);
+ function onPressEscKey(evt) {
+  const ESC_KEY_CODE = "Escape";
+  if (evt.code === ESC_KEY_CODE) {
+    instance.close();
+  }
+ }
 }
 
-function removeOpenModalClass() {
-    const curentOpenImage = document.querySelector('.gallery__item.modal__open');
-
-    if (curentOpenImage) {
-        curentOpenImage.classList.remove('modal__open')
-    }
-}
-
-function addOpenModalClass(img) {
-    img.classList.add('modal__open');
-}
-
-
-// const curentActiveImg = document.querySelector('.modal-open');
